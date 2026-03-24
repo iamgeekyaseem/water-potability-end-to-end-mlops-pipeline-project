@@ -14,7 +14,7 @@ app = FastAPI(
 def index():
     return {"message": "Welcome to the Water Potability Prediction API!"}
 
-with open(r'/Users/aseem/projects/mlpipeline/model.pkl', 'rb') as f:
+with open(r'model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 
