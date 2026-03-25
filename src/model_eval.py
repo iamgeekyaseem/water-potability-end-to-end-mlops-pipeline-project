@@ -27,7 +27,7 @@ def load_model(filename:str):
     except Exception as e:
         raise Exception(f"Error loading model from {filename}: {e}")
 
-def make_predictions(model, X_test:pd.DataFrame)-> np.ndarray:
+def make_predictions(model, X_test:pd.DataFrame):
     try:
         y_pred = model.predict(X_test)
         return y_pred
