@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import os
 
-# train_data = pd.read_csv(r"./data/raw/train.csv")
-# test_data = pd.read_csv(r"./data/raw/test.csv")
 def load_data(file_path:str)->pd.DataFrame:
     try:
         return pd.read_csv(file_path)
@@ -20,11 +18,6 @@ def fill_missing_values(dataframes:pd.DataFrame)->pd.DataFrame:
     except Exception as e:
         raise Exception(f"Error filling missing values: {e}")
     
-# train_preprocessed_data = fill_missing_values(train_data)
-# test_preprocessed_data = fill_missing_values(test_data)
-
-# data_path = os.path.join("data", "processed")
-# os.makedirs(data_path, exist_ok=True) 
 def create_directory(path:str, subfolder:str)-> str:
     try:
         data_path = os.path.join(path, subfolder)
@@ -33,9 +26,6 @@ def create_directory(path:str, subfolder:str)-> str:
     except Exception as e:
         raise Exception(f"Error creating directory: {e}")
 
-
-# train_preprocessed_data.to_csv(os.path.join(data_path, "train_processed.csv"), index=False)
-# test_preprocessed_data.to_csv(os.path.join(data_path, "test_processed.csv"), index=False)  
 def save_preprocessed_data(data:pd.DataFrame, path:str, filename:str)->None:
     try:
         data.to_csv(os.path.join(path, filename), index = False)

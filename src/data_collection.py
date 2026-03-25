@@ -5,8 +5,6 @@ from sklearn.model_selection import train_test_split
 
 import yaml
 
-# test_size = yaml.safe_load(open("params.yaml"))["data_collection"]["test_size"]
-# random_state = yaml.safe_load(open("params.yaml"))["data_collection"]["random_state"]
 def load_param(filepath: str, section: str, param_name: str): 
     try:
         with open(filepath, "r") as file:
@@ -15,7 +13,6 @@ def load_param(filepath: str, section: str, param_name: str):
     except Exception as e:
         raise Exception(f"Error Loading parameters from {filepath}: {e}")
 
-# data = pd.read_csv(r"/Users/aseem/projects/mlpipeline/water_potability.csv")
 def load_data(filepath: str) -> pd.DataFrame:
     try:
         data = pd.read_csv(filepath)
@@ -23,8 +20,6 @@ def load_data(filepath: str) -> pd.DataFrame:
     except Exception as e:
         raise Exception(f"Error Loading data from {filepath}: {e}")
 
-
-# train_data, test_data = train_test_split(data, test_size=test_size, random_state=random_state)
 def split_data(data: pd.DataFrame, test_size:float, random_state:int)-> tuple[pd.DataFrame, pd.DataFrame]:
     try:
         train_data, test_data = train_test_split(data, test_size = test_size, random_state = random_state)
@@ -32,7 +27,6 @@ def split_data(data: pd.DataFrame, test_size:float, random_state:int)-> tuple[pd
     except Exception as e:
         raise Exception(f"Error splitting data: {e}")
 
-# data_path = os.path.join("data", "raw")
 def create_data_path(base_path:str, subfolder:str)-> str:
     try:
         data_path = os.path.join(base_path, subfolder)
@@ -40,15 +34,12 @@ def create_data_path(base_path:str, subfolder:str)-> str:
     except Exception as e:
         raise Exception(f"Error creating data path: {e}")
 
-# os.makedirs(data_path, exist_ok=True) 
 def create_directory(path: str)-> None:
     try:
         os.makedirs(path, exist_ok = True)
     except Exception as e:
         raise Exception(f"Error creating directory: {e}")
 
-# train_data.to_csv(os.path.join(data_path, "train.csv"), index=False)
-# test_data.to_csv(os.path.join(data_path, "test.csv"), index=False) 
 def save_data(data: pd.DataFrame, path:str, filename:str)-> None:
     try:
         data.to_csv(os.path.join(path, filename), index = False)
