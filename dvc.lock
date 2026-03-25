@@ -45,8 +45,8 @@ stages:
       nfiles: 2
     - path: src/model_building.py
       hash: md5
-      md5: 4a43664e7db4175c3d89dd29c603932b
-      size: 1298
+      md5: 28a0778e2bbd26a1dc3f41e056fed4d9
+      size: 4408
     params:
       params.yaml:
         model_building.bootstrap: true
