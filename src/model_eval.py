@@ -3,6 +3,9 @@ import numpy as np
 
 import pickle
 import json
+# from dvclive import Live
+import mlflow
+import yaml
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
@@ -58,6 +61,41 @@ def save_metrics(metrics, filename: str):
     except Exception as e:
         raise Exception(f"Error saving metrics to {filename}: {e}")
 
+def load_param(filepath: str, section: str, param_name: str): 
+    try:
+        with open(filepath, "r") as file:
+            params = yaml.safe_load(file)
+        return params[section][param_name]
+    except Exception as e:
+        raise Exception(f"Error Loading parameters from {filepath}: {e}")
+
+def experiment_tracking(metrics):
+    try:
+        # mlflow.set_tracking_uri("http://localhost:5000")
+        mlflow.set_experiment("model_evaluation")
+        with mlflow.start_run():
+            mlflow.log_metric("accuracy", metrics[0])
+            mlflow.log_metric("precision", metrics[1])
+            mlflow.log_metric("recall", metrics[2])
+            mlflow.log_metric("f1_score", metrics[3])
+
+            mlflow.log_artifact("metrics.json")
+            mlflow.log_artifact("model.pkl")
+            # mlflow.log_artifact("params.yaml")
+
+            mlflow.log_param("model_name", "RandomForestClassifier")
+            mlflow.log_param("n_estimators", load_param("params.yaml", "model_building", "n_estimators"))
+            mlflow.log_param("random_state", load_param("params.yaml", "model_building", "random_state"))
+            mlflow.log_param("max_depth", load_param("params.yaml", "model_building", "max_depth"))
+            mlflow.log_param("min_samples_split", load_param("params.yaml", "model_building", "min_samples_split"))
+            mlflow.log_param("min_samples_leaf", load_param("params.yaml", "model_building", "min_samples_leaf"))
+            mlflow.log_param("max_features", load_param("params.yaml", "model_building", "max_features"))
+            mlflow.log_param("bootstrap", load_param("params.yaml", "model_building", "bootstrap"))
+            mlflow.log_param("n_jobs", load_param("params.yaml", "model_building", "n_jobs"))
+
+    except Exception as e:
+        raise Exception(f"Error in experiment tracking: {e}")
+
 def main():
     test_data_path = r"./data/processed/test_processed.csv"
     model_path = r"model.pkl"
@@ -69,6 +107,7 @@ def main():
         y_pred = make_predictions(model, X_test)
         metrics = calculate_metrics(y_test, y_pred)
         save_metrics(metrics, metrics_path)
+        experiment_tracking(metrics)
     except Exception as e:
         raise Exception(f"Error in main function: {e}")
 
