@@ -4,6 +4,8 @@ import pandas as pd
 import yaml
 from sklearn.model_selection import train_test_split
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 def load_param(filepath: str, section: str, param_name: str):
     try:
@@ -57,8 +59,8 @@ def save_data(data: pd.DataFrame, path: str, filename: str) -> None:
 
 
 def main():
-    dataset_path = r"data/raw/water_potability.csv"
-    param_path = r"params.yaml"
+    dataset_path = os.path.join(BASE_DIR, "data/raw/water_potability.csv")
+    param_path = os.path.join(BASE_DIR, "params.yaml")
     stage_name = "data_collection"
     try:
         data = load_data(dataset_path)
@@ -67,7 +69,7 @@ def main():
         train_data, test_data = split_data(
             data, test_size=test_size, random_state=random_state
         )
-        data_path = create_data_path("data", "raw")
+        data_path = os.path.join(BASE_DIR, "data/raw")
         create_directory(data_path)
         save_data(train_data, data_path, "train.csv")
         save_data(test_data, data_path, "test.csv")

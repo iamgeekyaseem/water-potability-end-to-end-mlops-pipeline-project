@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def load_data(file_path: str) -> pd.DataFrame:
     try:
@@ -40,14 +41,15 @@ def save_preprocessed_data(data: pd.DataFrame, path: str, filename: str) -> None
 
 
 def main():
-    train_data_path = r"./data/raw/train.csv"
-    test_data_path = r"./data/raw/test.csv"
+    train_data_path = os.path.join(BASE_DIR, "data/raw/train.csv")
+    test_data_path = os.path.join(BASE_DIR, "data/raw/test.csv")
     try:
         train_data = load_data(train_data_path)
         test_data = load_data(test_data_path)
         train_preprocessed_data = fill_missing_values(train_data)
         test_preprocessed_data = fill_missing_values(test_data)
-        data_path = create_directory("data", "processed")
+        data_path = os.path.join(BASE_DIR, "data/processed")
+        os.makedirs(data_path, exist_ok=True)
         save_preprocessed_data(
             train_preprocessed_data, data_path, "train_processed.csv"
         )

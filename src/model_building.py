@@ -6,6 +6,8 @@ import yaml
 from sklearn.ensemble import RandomForestClassifier
 
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def load_data(file_path: str) -> pd.DataFrame:
     try:
         return pd.read_csv(file_path)
@@ -15,7 +17,8 @@ def load_data(file_path: str) -> pd.DataFrame:
 
 def load_param(filepath: str, section: str, param_name: str):
     try:
-        return yaml.safe_load(open(filepath))[section][param_name]
+        with open(filepath, "r") as f:
+            return yaml.safe_load(f)[section][param_name]
     except Exception as e:
         raise Exception(f"Error loading parameters from {filepath}: {e}")
 
@@ -60,16 +63,17 @@ def train_model(
         raise Exception(f"Error training model: {e}")
 
 
-def save_model(model, filename: str) -> None:
+def save_model(model, filepath: str) -> None:
     try:
-        pickle.dump(model, open(os.path.join(filename), "wb"))
+        with open(filepath, "wb") as f:
+            pickle.dump(model, f)
     except Exception as e:
-        raise Exception(f"Error saving model to {os.path.join(filename)}: {e}")
+        raise Exception(f"Error saving model to {filepath}: {e}")
 
 
 def main():
-    train_data_path = r"./data/processed/train_processed.csv"
-    param_path = r"params.yaml"
+    train_data_path = os.path.join(BASE_DIR, "data/processed/train_processed.csv")
+    param_path = os.path.join(BASE_DIR, "params.yaml")
     stage_name = "model_building"
     try:
         train_data = load_data(train_data_path)
@@ -94,7 +98,8 @@ def main():
             bootstrap,
             n_jobs,
         )
-        save_model(model, filename="model.pkl")
+        model_path = os.path.join(BASE_DIR, "model.pkl")
+        save_model(model, filename=model_path)
     except Exception as e:
         raise Exception(f"Error in main function: {e}")
 
