@@ -2,3 +2,4 @@ pipeenv
 # /trained_model.pkl
 # /model.pkl
 # /metrics.json
+/metrics.json

@@ -15,7 +15,7 @@ stages:
     - data_collection.test_size
     - data_collection.random_state
     outs:
-    - data/raw
+    - data/raw/
   pre_processing:
     cmd: python src/data_prep.py
     deps:
@@ -38,11 +38,11 @@ stages:
     - model_building.bootstrap
     - model_building.n_jobs
     outs:
-    - model.pkl
+    - models/model.pkl
   model_eval:
     cmd: python src/model_eval.py
     deps:
-    - model.pkl
+    - models/model.pkl
     - src/model_eval.py
     metrics:
     - metrics.json

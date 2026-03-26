@@ -59,7 +59,7 @@ def save_data(data: pd.DataFrame, path: str, filename: str) -> None:
 
 
 def main():
-    dataset_path = os.path.join(BASE_DIR, "data/raw/water_potability.csv")
+    dataset_path = os.path.join(BASE_DIR, "water_potability.csv")
     param_path = os.path.join(BASE_DIR, "params.yaml")
     stage_name = "data_collection"
     try:

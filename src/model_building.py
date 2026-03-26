@@ -63,12 +63,16 @@ def train_model(
         raise Exception(f"Error training model: {e}")
 
 
-def save_model(model, filepath: str) -> None:
-    try:
-        with open(filepath, "wb") as f:
-            pickle.dump(model, f)
-    except Exception as e:
-        raise Exception(f"Error saving model to {filepath}: {e}")
+# def save_model(model, model_path: str):
+#     try:
+#         with open(model_path, "wb") as f:
+#             pickle.dump(model, f)
+#     except Exception as e:
+#         raise Exception(f"Error saving model to {model_path}: {e}")
+
+def save_model(model, path: str):
+    import joblib
+    joblib.dump(model, path)
 
 
 def main():
@@ -98,8 +102,9 @@ def main():
             bootstrap,
             n_jobs,
         )
-        model_path = os.path.join(BASE_DIR, "model.pkl")
-        save_model(model, filename=model_path)
+        model_path = os.path.join(BASE_DIR, "models/model.pkl")
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        save_model(model, model_path)
     except Exception as e:
         raise Exception(f"Error in main function: {e}")
 

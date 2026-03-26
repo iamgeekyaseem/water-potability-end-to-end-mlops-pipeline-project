@@ -1,5 +1,5 @@
 import json
-import pickle
+import os
 
 # from dvclive import Live
 import mlflow
@@ -9,6 +9,8 @@ import yaml
 from mlflow.data import from_pandas  # pyright: ignore[reportAttributeAccessIssue]
 from mlflow.models import infer_signature
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+
+from data_collection import BASE_DIR
 
 # import dagshub
 # dagshub.init(repo_owner='iamgeekyaseem',
@@ -34,12 +36,12 @@ def split_features_target(
         raise Exception(f"Error splitting features and target: {e}")
 
 
-def load_model(filename: str):
+def load_model(path: str):
     try:
-        model = pickle.load(open(filename, "rb"))
-        return model
+        import joblib
+        return joblib.load(path)
     except Exception as e:
-        raise Exception(f"Error loading model from {filename}: {e}")
+        raise RuntimeError(f"Error loading model from {path}") from e
 
 
 def make_predictions(model, X_test: pd.DataFrame):
@@ -96,8 +98,8 @@ def experiment_tracking(metrics):
             mlflow.log_metric("recall", metrics[2])
             mlflow.log_metric("f1_score", metrics[3])
 
-            mlflow.log_artifact("metrics.json")
-            mlflow.log_artifact("model.pkl")
+            mlflow.log_artifact(os.path.join(BASE_DIR, "metrics.json"))
+            mlflow.log_artifact(os.path.join(BASE_DIR, "models/model.pkl"))
             # mlflow.log_artifact("params.yaml")
 
             train_df = from_pandas(
@@ -146,9 +148,10 @@ def experiment_tracking(metrics):
             )
 
             mlflow.log_artifact(__file__)
-            model = load_model("model.pkl")
+            model = load_model(os.path.join(BASE_DIR, "models/model.pkl"))
+            X_test = X_test.astype(float)
             sign = infer_signature(X_test, model.predict(X_test))
-            mlflow.sklearn.log_model(
+            mlflow.sklearn.log_model( # type: ignore
                 model, "model", signature=sign
             )  # pyright: ignore[reportPrivateImportUsage]
 
@@ -158,8 +161,8 @@ def experiment_tracking(metrics):
 
 def main():
     test_data_path = r"./data/processed/test_processed.csv"
-    model_path = r"model.pkl"
-    metrics_path = r"metrics.json"
+    model_path = os.path.join(BASE_DIR, "models/model.pkl")
+    metrics_path = os.path.join(BASE_DIR, "metrics.json")
     try:
         test_data = load_data(test_data_path)
         X_test, y_test = split_features_target(test_data, target_column="Potability")

@@ -16,7 +16,7 @@ def fill_missing_values(dataframes: pd.DataFrame) -> pd.DataFrame:
         for column in dataframes.columns:
             if dataframes[column].isnull().any():
                 mean_value = dataframes[column].mean()
-                dataframes[column].fillna(mean_value, inplace=True)
+                dataframes[column] = dataframes[column].fillna(mean_value)
         return dataframes
     except Exception as e:
         raise Exception(f"Error filling missing values: {e}")
