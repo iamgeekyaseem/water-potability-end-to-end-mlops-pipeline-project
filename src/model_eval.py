@@ -6,7 +6,7 @@ import mlflow
 import numpy as np
 import pandas as pd
 import yaml
-from mlflow.data import from_pandas
+from mlflow.data import from_pandas # pyright: ignore[reportAttributeAccessIssue]
 from mlflow.models import infer_signature
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
@@ -148,7 +148,7 @@ def experiment_tracking(metrics):
             mlflow.log_artifact(__file__)
             model = load_model("model.pkl")
             sign = infer_signature(X_test, model.predict(X_test))
-            mlflow.sklearn.log_model(model, "model", signature=sign)
+            mlflow.sklearn.log_model(model, "model", signature=sign) # pyright: ignore[reportPrivateImportUsage]
 
     except Exception as e:
         raise Exception(f"Error in experiment tracking: {e}")
