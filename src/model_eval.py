@@ -7,6 +7,11 @@ import json
 import mlflow
 import yaml
 
+import dagshub
+dagshub.init(repo_owner='iamgeekyaseem', repo_name='water-potability-end-to-end-mlops-pipeline-project', mlflow=True)
+
+
+
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 def load_data(file_path:str)->pd.DataFrame:
@@ -72,6 +77,7 @@ def load_param(filepath: str, section: str, param_name: str):
 def experiment_tracking(metrics):
     try:
         # mlflow.set_tracking_uri("http://localhost:5000")
+        mlflow.set_tracking_uri("https://dagshub.com/iamgeekyaseem/water-potability-end-to-end-mlops-pipeline-project.mlflow")
         mlflow.set_experiment("model_evaluation")
         with mlflow.start_run():
             mlflow.log_metric("accuracy", metrics[0])
