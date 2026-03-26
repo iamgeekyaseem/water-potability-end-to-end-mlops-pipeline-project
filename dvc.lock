@@ -5,16 +5,16 @@ stages:
     deps:
     - path: src/data_collection.py
       hash: md5
-      md5: aca03f61789f011b37c0238a64ba03c2
-      size: 2448
+      md5: dfeb7081f0f9be427dd5d1423bf62470
+      size: 2429
     params:
       params.yaml:
         data_collection.random_state: 42
-        data_collection.test_size: 0.3
+        data_collection.test_size: 0.2
     outs:
     - path: data/raw
       hash: md5
-      md5: 43f22e8600c04238d0a8156861cff355.dir
+      md5: f508f5f2cfb3fcc116235f0993dd2e00.dir
       size: 520443
       nfiles: 2
   pre_processing:
@@ -22,59 +22,75 @@ stages:
     deps:
     - path: data/raw
       hash: md5
-      md5: 43f22e8600c04238d0a8156861cff355.dir
+      md5: f508f5f2cfb3fcc116235f0993dd2e00.dir
       size: 520443
       nfiles: 2
     - path: src/data_prep.py
       hash: md5
-      md5: 33c1596725301db5cca7b2a9fbe13d90
-      size: 1887
+      md5: 73cc5b42ef30ed2e963c874f013233b4
+      size: 1925
     outs:
     - path: data/processed
       hash: md5
-      md5: c5394c34491e89118c94a5a4923bca79.dir
-      size: 545739
+      md5: b7b192701669b1e5efcb8878319ba70c.dir
+      size: 545356
       nfiles: 2
   model_building:
     cmd: python src/model_building.py
     deps:
     - path: data/processed
       hash: md5
-      md5: c5394c34491e89118c94a5a4923bca79.dir
-      size: 545739
+      md5: b7b192701669b1e5efcb8878319ba70c.dir
+      size: 545356
       nfiles: 2
     - path: src/model_building.py
       hash: md5
-      md5: 332bedbef087c5748b564947776b5468
-      size: 3219
+      md5: 46294d9ffc9c28a672e118a965091a47
+      size: 3214
     params:
       params.yaml:
         model_building.bootstrap: true
         model_building.max_depth:
         model_building.max_features: sqrt
         model_building.min_samples_leaf: 2
-        model_building.min_samples_split: 3
-        model_building.n_estimators: 500
+        model_building.min_samples_split: 2
+        model_building.n_estimators: 1000
         model_building.n_jobs: -1
         model_building.random_state: 42
     outs:
     - path: model.pkl
       hash: md5
-      md5: baaf5177927ec6c3d19e941d14dd21cc
-      size: 27372246
+      md5: 6a2b894b885a5f5a3950af2a76362fc2
+      size: 61992977
   model_eval:
     cmd: python src/model_eval.py
     deps:
     - path: model.pkl
       hash: md5
-      md5: baaf5177927ec6c3d19e941d14dd21cc
-      size: 27372246
+      md5: 6a2b894b885a5f5a3950af2a76362fc2
+      size: 61992977
     - path: src/model_eval.py
       hash: md5
-      md5: 0053d5c566fbb44fd1d4e620e2cc201f
-      size: 4434
+      md5: 47f589ef9a16729bf0c440443b9e458a
+      size: 5905
     outs:
     - path: metrics.json
       hash: md5
-      md5: b7307a6ccab0aaf632593d0f6362773c
-      size: 147
+      md5: e8902360e821e9defce0f7c59e156f61
+      size: 145
+  lint:
+    cmd: flake8 src
+    deps:
+    - path: src
+      hash: md5
+      md5: f055beed2dffaca2f2d1ae9430e52e03.dir
+      size: 7399684
+      nfiles: 11
+  format:
+    cmd: black src
+    deps:
+    - path: src
+      hash: md5
+      md5: f055beed2dffaca2f2d1ae9430e52e03.dir
+      size: 7399684
+      nfiles: 11

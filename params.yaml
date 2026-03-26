@@ -1,12 +1,12 @@
 data_collection:
-  test_size: 0.3
+  test_size: 0.2
   random_state: 42
 
 model_building:
-  n_estimators: 500
+  n_estimators: 1000
   random_state: 42
   max_depth: null
-  min_samples_split: 3
+  min_samples_split: 2
   min_samples_leaf: 2
   max_features: sqrt
   bootstrap: true

@@ -1,4 +1,12 @@
 stages:
+  format:
+    cmd: black src
+    deps:
+    - src
+  lint:
+    cmd: flake8 src
+    deps:
+    - src
   data_collection:
     cmd: python src/data_collection.py
     deps:
@@ -38,3 +46,4 @@ stages:
     - src/model_eval.py
     metrics:
     - metrics.json
+  

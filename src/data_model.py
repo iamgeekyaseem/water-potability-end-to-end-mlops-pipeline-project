@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-import pickle
+
 
 class Water(BaseModel):
     ph: float
