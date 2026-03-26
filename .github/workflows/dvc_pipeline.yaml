@@ -20,8 +20,5 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Cache pip
-        uses: actions/cache@v4
-
       - name: Run DVC pipeline
         run: dvc repro
