@@ -13,12 +13,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Debug paths
-        run: |
-          pwd
-          ls
-          ls data
-          ls data/raw
       - name: Checkout repo
         uses: actions/checkout@v4
 
