@@ -1,4 +1,4 @@
-name: Cross Platform Pipeline
+name: Cross Platform DVC Pipeline
 
 on:
   push:
@@ -21,9 +21,29 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Cache DVC
+        uses: actions/cache@v4
+        with:
+          path: .dvc/cache
+          key: ${{ runner.os }}-dvc-${{ hashFiles('dvc.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-dvc-
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install dvc
 
-      - name: Run script
-        run: python src/data_collection.py
+      - name: Pull DVC data
+        run: dvc pull
+
+      - name: Run pipeline
+        run: dvc repro
